@@ -1,18 +1,41 @@
 [project]
 name = "bettercolors"
 version = "0.1.0"
-description = "Default template for PDM package"
+description = "A Pythonic library for creating beautiful, algorithmic color schemes."
 authors = [
     {name = "B.T. Franklin", email = "brandon.franklin@gmail.com"},
 ]
 dependencies = []
-requires-python = "==3.12.*"
+requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Multimedia :: Graphics",
+]
 
+[project.urls]
+Homepage = "https://github.com/btfranklin/bettercolors"
+Issues = "https://github.com/btfranklin/bettercolors/issues"
+Repository = "https://github.com/btfranklin/bettercolors.git"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.pdm]
 distribution = true
+
+[tool.pdm.build]
+excludes = ["tests/**"]
 
 [dependency-groups]
 dev = [
