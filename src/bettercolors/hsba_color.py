@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import random
+from typing import Self
 
 @dataclass(frozen=True)
 class HSBAColor:
@@ -12,13 +13,11 @@ class HSBAColor:
     brightness: float
     alpha: float
 
-    def __post_init__(self):
-        # We don't strictly enforce range in init to allow for intermediate calculations 
-        # or garbage in/garbage out if user desires, but standard usage expects 0-1.
-        # The Swift version didn't clap on init, just defined types.
-        pass
+    def __iter__(self):
+        """Allows unpacking: h, s, b, a = color"""
+        return iter((self.hue, self.saturation, self.brightness, self.alpha))
 
-    def adjust_hue(self, change: float) -> 'HSBAColor':
+    def adjust_hue(self, change: float) -> Self:
         """
         Returns a new HSBAColor with the hue adjusted by the given amount.
         The result is wrapped to the [0.0, 1.0] range cyclically.
@@ -36,11 +35,11 @@ class HSBAColor:
         
         return HSBAColor(new_hue, self.saturation, self.brightness, self.alpha)
 
-    def complement(self) -> 'HSBAColor':
+    def complement(self) -> Self:
         """Returns the complementary color (180 degrees reduced hue)."""
         return self.adjust_hue(0.5)
 
-    def adjust_saturation(self, change: float, floor: float = 0.0, ceiling: float = 1.0, overflow: bool = False) -> 'HSBAColor':
+    def adjust_saturation(self, change: float, floor: float = 0.0, ceiling: float = 1.0, overflow: bool = False) -> Self:
         """
         Returns a new HSBAColor with adjusted saturation.
         If overflow is True, values outside [floor, ceiling] wrap around.
@@ -50,7 +49,7 @@ class HSBAColor:
         new_saturation = self._apply_bounds(new_saturation, floor, ceiling, overflow)
         return HSBAColor(self.hue, new_saturation, self.brightness, self.alpha)
 
-    def adjust_brightness(self, change: float, floor: float = 0.0, ceiling: float = 1.0, overflow: bool = False) -> 'HSBAColor':
+    def adjust_brightness(self, change: float, floor: float = 0.0, ceiling: float = 1.0, overflow: bool = False) -> Self:
         """
         Returns a new HSBAColor with adjusted brightness.
         """
@@ -58,7 +57,7 @@ class HSBAColor:
         new_brightness = self._apply_bounds(new_brightness, floor, ceiling, overflow)
         return HSBAColor(self.hue, self.saturation, new_brightness, self.alpha)
 
-    def adjust_alpha(self, change: float, floor: float = 0.0, ceiling: float = 1.0) -> 'HSBAColor':
+    def adjust_alpha(self, change: float, floor: float = 0.0, ceiling: float = 1.0) -> Self:
         """
         Returns a new HSBAColor with adjusted alpha.
         Alpha is always clamped, never overflows.
@@ -85,15 +84,15 @@ class HSBAColor:
                 value = floor
         return value
 
-    @staticmethod
-    def random(saturation_range: tuple[float, float] = (0.0, 1.0),
-               brightness_range: tuple[float, float] = (0.0, 1.0)) -> 'HSBAColor':
+    @classmethod
+    def random(cls, saturation_range: tuple[float, float] = (0.0, 1.0),
+               brightness_range: tuple[float, float] = (0.0, 1.0)) -> Self:
         """
         Generates a random HSBAColor.
         Hue is always random [0.0, 1.0].
         Alpha is 1.0.
         """
-        return HSBAColor(
+        return cls(
             hue=random.uniform(0.0, 1.0),
             saturation=random.uniform(*saturation_range),
             brightness=random.uniform(*brightness_range),

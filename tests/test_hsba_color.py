@@ -43,3 +43,11 @@ def test_random():
     assert 0.0 <= c.saturation <= 1.0
     assert 0.0 <= c.brightness <= 1.0
     assert c.alpha == 1.0
+
+def test_unpacking():
+    c = HSBAColor(0.1, 0.2, 0.3, 0.4)
+    h, s, b, a = c
+    assert h == 0.1
+    assert s == 0.2
+    assert b == 0.3
+    assert a == 0.4

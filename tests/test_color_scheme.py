@@ -55,3 +55,17 @@ def test_make_split_complementary(theme_color):
 def test_make_triadic(theme_color):
     scheme = ColorScheme.from_triadic(theme_color)
     assert len(scheme.colors) == 5
+
+def test_sequence_protocol(theme_color):
+    scheme = ColorScheme.from_analogous(theme_color)
+    
+    # Test len
+    assert len(scheme) == 5
+    
+    # Test getitem
+    assert scheme[0] == theme_color
+    
+    # Test iter
+    colors = list(scheme)
+    assert len(colors) == 5
+    assert colors[0] == theme_color
