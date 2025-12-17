@@ -1,6 +1,5 @@
 import pytest
-from bettercolors.hsba_color import HSBAColor
-from bettercolors.color_scheme import ColorScheme
+from paintcan import ColorScheme, HSBAColor
 
 @pytest.fixture
 def theme_color():

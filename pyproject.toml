@@ -1,5 +1,5 @@
 [project]
-name = "bettercolors"
+name = "paintcan"
 version = "0.1.0"
 description = "A Pythonic library for creating beautiful, algorithmic color schemes."
 authors = [
@@ -23,9 +23,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/btfranklin/bettercolors"
-Issues = "https://github.com/btfranklin/bettercolors/issues"
-Repository = "https://github.com/btfranklin/bettercolors.git"
+Homepage = "https://github.com/btfranklin/paintcan"
+Issues = "https://github.com/btfranklin/paintcan/issues"
+Repository = "https://github.com/btfranklin/paintcan.git"
 
 [build-system]
 requires = ["pdm-backend"]

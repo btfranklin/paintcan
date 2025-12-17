@@ -1,5 +1,5 @@
 import pytest
-from bettercolors.hsba_color import HSBAColor
+from paintcan import HSBAColor
 
 def test_initialization():
     c = HSBAColor(0.5, 0.5, 0.5, 1.0)

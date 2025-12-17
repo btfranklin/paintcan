@@ -1,8 +1,8 @@
-# BetterColors
+# Paintcan
 
-![BetterColors Social Preview](.github/social%20preview/bettercolors_social_preview.jpg)
+![Paintcan Social Preview](.github/social%20preview/bettercolors_social_preview.jpg)
 
-**BetterColors** is a high-quality, Pythonic library for working with HSBA colors and generating beautiful, algorithmic color schemes. It provides robust tools for color manipulation and harmony generation.
+**Paintcan** is a high-quality, Pythonic library for working with HSBA colors and generating beautiful, algorithmic color schemes. It provides robust tools for color manipulation and harmony generation.
 
 ## Features
 
@@ -26,12 +26,12 @@
 
 Using PDM:
 ```bash
-pdm add bettercolors
+pdm add paintcan
 ```
 
 Using pip:
 ```bash
-pip install bettercolors
+pip install paintcan
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ pip install bettercolors
 ### Working with HSBAColor
 
 ```python
-from bettercolors import HSBAColor
+from paintcan import HSBAColor
 
 # Create a color (Red)
 red = HSBAColor(hue=0.0, saturation=1.0, brightness=1.0, alpha=1.0)
@@ -58,7 +58,7 @@ print(f"Hue: {h}, Saturation: {s}")
 ### Generating Color Schemes
 
 ```python
-from bettercolors import HSBAColor, ColorScheme
+from paintcan import HSBAColor, ColorScheme
 
 # Start with a base color
 base = HSBAColor(0.5, 0.8, 0.9, 1.0) # Cyan-ish
@@ -80,10 +80,10 @@ To see the color schemes in action in your terminal (using ANSI colors):
 
 ```bash
 # If installed via PDM/Dev
-pdm run python -m bettercolors
+pdm run python -m paintcan
 
 # If installed in your environment
-python -m bettercolors
+python -m paintcan
 ```
 
 ## License
