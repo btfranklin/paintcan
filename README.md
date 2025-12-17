@@ -1,5 +1,7 @@
 # BetterColors
 
+![BetterColors Social Preview](.github/social%20preview/bettercolors_social_preview.jpg)
+
 **BetterColors** is a high-quality, Pythonic library for working with HSBA colors and generating beautiful, algorithmic color schemes. It provides robust tools for color manipulation and harmony generation.
 
 ## Features
