@@ -1,6 +1,8 @@
 # PaintCan
 
-![PaintCan Social Preview](.github/social%20preview/paintcan_social_preview.jpg)
+![PaintCan banner](https://raw.githubusercontent.com/btfranklin/paintcan/main/.github/social%20preview/paintcan_social_preview.jpg "PaintCan")
+
+[![Build Status](https://github.com/btfranklin/paintcan/actions/workflows/python-package.yml/badge.svg)](https://github.com/btfranklin/paintcan/actions/workflows/python-package.yml) [![Supports Python versions 3.11+](https://img.shields.io/pypi/pyversions/paintcan.svg)](https://pypi.python.org/pypi/paintcan)
 
 **PaintCan** is a high-quality, Pythonic library for working with HSBA colors and generating beautiful, algorithmic color schemes. It provides robust tools for color manipulation and harmony generation.
 
