@@ -24,7 +24,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v6.1.0
       with:
-        python-version: '3.x'
+        python-version: "3.11"
     - name: Install PDM and mypy
       run: |
         python -m pip install --upgrade pip
