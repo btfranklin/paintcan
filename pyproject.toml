@@ -1,6 +1,6 @@
 [project]
 name = "paintcan"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Pythonic library for creating beautiful, algorithmic color schemes."
 authors = [
     {name = "B.T. Franklin", email = "brandon.franklin@gmail.com"},
