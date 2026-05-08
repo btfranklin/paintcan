@@ -2,7 +2,7 @@ from .hsba_color import HSBAColor
 from .color_scheme import ColorScheme
 
 
-def print_color(color: HSBAColor, text: str = "  "):
+def print_color(color: HSBAColor, text: str = "  ") -> None:
     # Simple HSBA to RGB conversion for demo purposes
     # Source: https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
     h = color.hue * 360
@@ -14,17 +14,17 @@ def print_color(color: HSBAColor, text: str = "  "):
     m = v - c
 
     if 0 <= h < 60:
-        r, g, b = c, x, 0
+        r, g, b = c, x, 0.0
     elif 60 <= h < 120:
-        r, g, b = x, c, 0
+        r, g, b = x, c, 0.0
     elif 120 <= h < 180:
-        r, g, b = 0, c, x
+        r, g, b = 0.0, c, x
     elif 180 <= h < 240:
-        r, g, b = 0, x, c
+        r, g, b = 0.0, x, c
     elif 240 <= h < 300:
-        r, g, b = x, 0, c
+        r, g, b = x, 0.0, c
     else:
-        r, g, b = c, 0, x
+        r, g, b = c, 0.0, x
 
     r = int((r + m) * 255)
     g = int((g + m) * 255)
@@ -34,14 +34,14 @@ def print_color(color: HSBAColor, text: str = "  "):
     print(f"\033[48;2;{r};{g};{b}m{text}\033[0m", end=" ")
 
 
-def print_scheme(name: str, scheme: ColorScheme):
+def print_scheme(name: str, scheme: ColorScheme) -> None:
     print(f"{name:<15}: ", end="")
     for color in scheme:
         print_color(color, "      ")
     print(f"  (Theme Hue: {scheme.theme_color.hue:.2f})")
 
 
-def main():
+def main() -> None:
     # Start with a random bright color
     print("Generating random base color...")
     base = HSBAColor.random(
@@ -49,7 +49,7 @@ def main():
         brightness_range=(0.8, 1.0),
     )
 
-    print("\nBetterColors Demo")
+    print("\nPaintCan Demo")
     print("=================")
     print(f"{'Base Color':<15}: ", end="")
     print_color(base, "      ")

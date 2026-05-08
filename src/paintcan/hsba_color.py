@@ -1,4 +1,5 @@
 import random
+from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Self
 
@@ -14,7 +15,13 @@ class HSBAColor:
     brightness: float
     alpha: float
 
-    def __iter__(self):
+    def __post_init__(self) -> None:
+        self._validate_component("hue", self.hue)
+        self._validate_component("saturation", self.saturation)
+        self._validate_component("brightness", self.brightness)
+        self._validate_component("alpha", self.alpha)
+
+    def __iter__(self) -> Iterator[float]:
         """Allows unpacking: h, s, b, a = color"""
         return iter((self.hue, self.saturation, self.brightness, self.alpha))
 
@@ -34,7 +41,7 @@ class HSBAColor:
         elif new_hue < 0.0:
             new_hue += 1.0
 
-        return HSBAColor(new_hue, self.saturation, self.brightness, self.alpha)
+        return type(self)(new_hue, self.saturation, self.brightness, self.alpha)
 
     def complement(self) -> Self:
         """Returns the complementary color (180 degrees reduced hue)."""
@@ -59,7 +66,7 @@ class HSBAColor:
             ceiling,
             overflow,
         )
-        return HSBAColor(self.hue, new_saturation, self.brightness, self.alpha)
+        return type(self)(self.hue, new_saturation, self.brightness, self.alpha)
 
     def adjust_brightness(
         self,
@@ -78,7 +85,7 @@ class HSBAColor:
             ceiling,
             overflow,
         )
-        return HSBAColor(self.hue, self.saturation, new_brightness, self.alpha)
+        return type(self)(self.hue, self.saturation, new_brightness, self.alpha)
 
     def adjust_alpha(
         self,
@@ -90,33 +97,46 @@ class HSBAColor:
         Returns a new HSBAColor with adjusted alpha.
         Alpha is always clamped, never overflows.
         """
+        self._validate_bounds(floor, ceiling)
         new_alpha = self.alpha + change
         if new_alpha > ceiling:
             new_alpha = ceiling
         elif new_alpha < floor:
             new_alpha = floor
 
-        return HSBAColor(self.hue, self.saturation, self.brightness, new_alpha)
+        return type(self)(self.hue, self.saturation, self.brightness, new_alpha)
 
+    @staticmethod
     def _apply_bounds(
-        self,
         value: float,
         floor: float,
         ceiling: float,
         overflow: bool,
     ) -> float:
         """Helper to apply floor/ceiling logic with optional overflow."""
-        if overflow:
-            if value > ceiling:
-                value -= (ceiling - floor)
-            elif value < floor:
-                value += (ceiling - floor)
-        else:
-            if value > ceiling:
-                value = ceiling
-            elif value < floor:
-                value = floor
-        return value
+        HSBAColor._validate_bounds(floor, ceiling)
+        if floor <= value <= ceiling:
+            return value
+
+        if not overflow:
+            return min(max(value, floor), ceiling)
+
+        span = ceiling - floor
+        if span == 0.0:
+            return floor
+        return ((value - floor) % span) + floor
+
+    @staticmethod
+    def _validate_bounds(floor: float, ceiling: float) -> None:
+        HSBAColor._validate_component("floor", floor)
+        HSBAColor._validate_component("ceiling", ceiling)
+        if floor > ceiling:
+            raise ValueError("Floor must be less than or equal to ceiling")
+
+    @staticmethod
+    def _validate_component(name: str, value: float) -> None:
+        if not (0.0 <= value <= 1.0):
+            raise ValueError(f"{name} must be between 0.0 and 1.0")
 
     @classmethod
     def random(
@@ -129,6 +149,8 @@ class HSBAColor:
         Hue is always random [0.0, 1.0].
         Alpha is 1.0.
         """
+        cls._validate_bounds(*saturation_range)
+        cls._validate_bounds(*brightness_range)
         return cls(
             hue=random.uniform(0.0, 1.0),
             saturation=random.uniform(*saturation_range),

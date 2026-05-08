@@ -1,26 +1,38 @@
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
-from typing import Iterator, Self, Tuple
+from typing import Self, overload
 
 from .hsba_color import HSBAColor
 
 
-@dataclass(frozen=True)
-class ColorScheme:
+@dataclass(frozen=True, init=False)
+class ColorScheme(Sequence[HSBAColor]):
     """
     A collection of colors comprising a color scheme.
     Behaves like a read-only sequence of HSBAColor.
     """
 
-    colors: Tuple[HSBAColor, ...]
+    colors: tuple[HSBAColor, ...]
 
-    def __post_init__(self):
-        if not self.colors:
+    def __init__(self, colors: Iterable[HSBAColor]) -> None:
+        colors = tuple(colors)
+        if not colors:
             raise ValueError("ColorScheme colors cannot be empty")
+        object.__setattr__(self, "colors", colors)
 
     def __len__(self) -> int:
         return len(self.colors)
 
-    def __getitem__(self, index: int) -> HSBAColor:
+    @overload
+    def __getitem__(self, index: int) -> HSBAColor: ...
+
+    @overload
+    def __getitem__(self, index: slice) -> tuple[HSBAColor, ...]: ...
+
+    def __getitem__(
+        self,
+        index: int | slice,
+    ) -> HSBAColor | tuple[HSBAColor, ...]:
         return self.colors[index]
 
     def __iter__(self) -> Iterator[HSBAColor]:

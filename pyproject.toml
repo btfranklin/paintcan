@@ -32,6 +32,20 @@ Repository = "https://github.com/btfranklin/paintcan.git"
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.14.11",
+    "mypy>=2.0.0",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
 [tool.pdm]
 distribution = true
 
@@ -41,15 +55,9 @@ source = "scm"
 [tool.pdm.build]
 excludes = ["tests/**"]
 
-[dependency-groups]
-dev = [
-    "pytest>=9.0.2",
-    "ruff>=0.14.11",
-]
-
 [tool.pdm.scripts]
 test = "pytest"
 lint = "ruff check src tests"
-
-[tool.ruff.lint]
-select = ["E", "F", "W"]
+typecheck = "mypy src tests"
+"check:repo" = "pytest tests/test_repo_legibility.py"
+check = {composite = ["lint", "typecheck", "check:repo", "test"]}
