@@ -22,6 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Multimedia :: Graphics",
 ]
+dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/btfranklin/paintcan"
@@ -34,9 +35,9 @@ build-backend = "pdm.backend"
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0.2",
-    "ruff>=0.14.11",
-    "mypy>=2.0.0",
+    "pytest>=9.1.1",
+    "ruff>=0.15.18",
+    "mypy>=2.1.0",
 ]
 
 [tool.ruff.lint]
