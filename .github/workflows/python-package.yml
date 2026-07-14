@@ -4,43 +4,42 @@
 name: Python package
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                python-version: ["3.11", "3.12", "3.13", "3.14"]
 
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14"]
-
-    steps:
-      - uses: actions/checkout@v6
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install PDM
-        uses: pdm-project/setup-pdm@v4
-      - name: Install dependencies
-        run: |
-          pdm install --group dev
-      - name: Lint with ruff
-        run: |
-          pdm run ruff check src tests --statistics
-      - name: Type check with mypy
-        run: |
-          pdm run mypy src tests
-      - name: Check repo legibility
-        run: |
-          pdm run check:repo
-      - name: Test with pytest
-        run: |
-          pdm run pytest
-      - name: Build package
-        run: |
-          pdm build
+        steps:
+            - uses: actions/checkout@v6
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v6
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Install PDM
+              uses: pdm-project/setup-pdm@v4
+            - name: Install dependencies
+              run: |
+                  pdm install --group dev
+            - name: Lint with ruff
+              run: |
+                  pdm run ruff check src tests --statistics
+            - name: Type check with mypy
+              run: |
+                  pdm run mypy src tests
+            - name: Check repo legibility
+              run: |
+                  pdm run check:repo
+            - name: Test with pytest
+              run: |
+                  pdm run pytest
+            - name: Build package
+              run: |
+                  pdm build
