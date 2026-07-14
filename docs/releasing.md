@@ -23,7 +23,7 @@ local validation contract before publishing.
 
 - `.github/workflows/python-package.yml` validates pushes and pull requests
   across supported Python versions.
-- `.github/workflows/draft-release-notes.yml` drafts release notes for
+- `.github/workflows/create-draft-release.yml` drafts release notes for
   `v*.*.*` tags.
 - `.github/workflows/python-publish.yml` publishes to PyPI when a GitHub release
   is published.
