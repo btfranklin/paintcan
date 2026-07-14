@@ -25,6 +25,9 @@ jobs:
                   python-version: ${{ matrix.python-version }}
             - name: Install PDM
               uses: pdm-project/setup-pdm@v4
+              with:
+                  cache: true
+                  cache-dependency-path: pdm.lock
             - name: Install dependencies
               run: |
                   pdm install --group dev
