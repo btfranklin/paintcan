@@ -38,6 +38,9 @@ dev = [
     "pytest>=9.1.1",
     "ruff>=0.15.18",
     "mypy>=2.1.0",
+    "pyyaml>=6.0.3",
+    "markdown-it-py>=4.2.0",
+    "types-pyyaml>=6.0.12.20260518",
 ]
 
 [tool.ruff.lint]
