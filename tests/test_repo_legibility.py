@@ -161,7 +161,7 @@ def test_ci_build_job_runs_all_validation_lanes() -> None:
     assert matrix.get("python-version") == ["3.11", "3.12", "3.13", "3.14"]
 
     required_actions: list[tuple[str, dict[str, str] | None]] = [
-        ("actions/checkout@v6", None),
+        ("actions/checkout@v7", None),
         (
             "actions/setup-python@v6",
             {"python-version": "${{ matrix.python-version }}"},
