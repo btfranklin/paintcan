@@ -24,6 +24,12 @@ changes.
 After building release artifacts, run `pdm run package-check` to validate the
 wheel and source archive metadata and README rendering with Twine.
 
+The ordinary CI workflow is reusable and runs these validation lanes plus build
+and archive checks across Python 3.11–3.14. Version-tag draft preparation calls
+that same matrix and creates the draft only after it succeeds. Publishing the
+reviewed release rebuilds and uploads packages without rerunning validation; see
+[releasing.md](releasing.md) for the supported event sequence.
+
 ## Test Contracts
 
 Tests should protect user-facing behavior rather than mirror implementation

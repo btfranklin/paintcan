@@ -198,6 +198,7 @@ def test_ci_build_job_runs_all_validation_lanes() -> None:
         "pdm run check:repo",
         "pdm run pytest",
         "pdm build",
+        "pdm run package-check",
     ]
     command_indexes: list[int] = []
     for command in required_commands:
@@ -224,3 +225,66 @@ def test_ci_build_job_runs_all_validation_lanes() -> None:
     assert action_indexes[-1] < command_indexes[0], (
         "Required setup actions must run before validation commands"
     )
+
+
+def workflow(path: str) -> dict[str, Any]:
+    parsed = yaml.safe_load(read_repo_file(f".github/workflows/{path}.yml"))
+    assert isinstance(parsed, dict)
+    return cast(dict[str, Any], parsed)
+
+
+def workflow_events(config: dict[str, Any]) -> dict[str, Any]:
+    # PyYAML's YAML 1.1 loader interprets the GitHub Actions key "on" as True.
+    events = config.get("on", cast(dict[Any, Any], config).get(True))
+    assert isinstance(events, dict)
+    return cast(dict[str, Any], events)
+
+
+def test_tag_draft_waits_for_shared_validation() -> None:
+    validation = workflow("python-package")
+    assert "workflow_call" in workflow_events(validation)
+    checkout = build_steps(python_package_build())[0]
+    assert checkout["with"]["fetch-depth"] == 0
+
+    draft = workflow("create-draft-release")
+    assert workflow_events(draft) == {"push": {"tags": ["v*.*.*"]}}
+    gate = draft["jobs"]["validate"]
+    assert gate == {
+        "uses": "./.github/workflows/python-package.yml",
+        "permissions": {"contents": "read"},
+    }
+    release = draft["jobs"]["draft-release"]
+    assert release["needs"] == "validate"
+    steps = build_steps(release)
+    assert steps[0]["with"] == {"fetch-depth": 0, "ref": "${{ github.sha }}"}
+    assert steps[1]["uses"] == "btfranklin/release-notes-scribe@v0"
+    assert steps[1]["with"]["draft"] == "true"
+    assert steps[1]["with"]["create_release"] == "true"
+    assert all("if" not in step for step in steps)
+    assert all(not step.get("continue-on-error", False) for step in steps)
+
+
+def test_published_release_builds_tag_and_uses_trusted_publishing() -> None:
+    publisher = workflow("python-publish")
+    assert workflow_events(publisher) == {"release": {"types": ["published"]}}
+    assert list(publisher["jobs"]) == ["publish"]
+    publish = publisher["jobs"]["publish"]
+    assert publish["environment"] == "release"
+    assert publish["permissions"] == {"contents": "read", "id-token": "write"}
+    steps = build_steps(publish)
+    assert steps == [
+        {
+            "uses": "actions/checkout@v7",
+            "with": {
+                "ref": "${{ github.event.release.tag_name }}",
+                "fetch-depth": 0,
+            },
+        },
+        {"uses": "actions/setup-python@v7", "with": {"python-version": "3.11"}},
+        {"uses": "pdm-project/setup-pdm@v4", "with": {"python-version": "3.11"}},
+        {"name": "Build package from release tag", "run": "pdm build"},
+        {
+            "name": "Publish package with Trusted Publishing",
+            "uses": "pypa/gh-action-pypi-publish@release/v1",
+        },
+    ]

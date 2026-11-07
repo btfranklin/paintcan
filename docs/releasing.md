@@ -22,16 +22,23 @@ local validation contract before publishing.
 
 ## GitHub Automation
 
-- `.github/workflows/python-package.yml` validates pushes and pull requests
-  across supported Python versions.
-- `.github/workflows/verify-release.yml` runs the full `pdm run check` suite
-  on the event commit, builds the package, checks both archives with Twine,
-  and stores them as `verified-python-package`.
-- `.github/workflows/create-draft-release.yml` requires that reusable
-  verification before drafting release notes for `v*.*.*` tags.
-- `.github/workflows/python-publish.yml` publishes to PyPI when a GitHub release
-  is published. It requires the same verification, then downloads and uploads
-  those checked archives without rebuilding them in the publisher job.
+- `.github/workflows/python-package.yml` is the shared validation workflow for
+  pushes, pull requests, and draft preparation. It runs lint, type, repo, test,
+  build, and Twine archive checks on Python 3.11, 3.12, 3.13, and 3.14.
+- `.github/workflows/create-draft-release.yml` calls that workflow for
+  `v*.*.*` tag pushes. Only after every matrix job succeeds does
+  `btfranklin/release-notes-scribe` create the actual GitHub draft release.
+- `.github/workflows/python-publish.yml` runs when the reviewed GitHub release
+  is published. It checks out `github.event.release.tag_name` with full history,
+  rebuilds the package archives, and uploads them through PyPI Trusted Publishing
+  in the `release` environment. It trusts draft preparation and does not repeat
+  validation or retrieve artifacts from earlier workflow runs.
+
+The supported validated path is: push the version tag, wait for all checks and
+its generated draft, review the draft, then Publish. Creating a draft manually
+in GitHub does not trigger tag validation, and the publication workflow does not
+establish that a manually created draft was checked. Use the tag-generated draft
+for publication, and leave the release tag pointing at the validated commit.
 
 The publish workflow uses PyPI trusted publishing. Keep package metadata in
 `pyproject.toml` aligned with the README and supported Python classifiers.

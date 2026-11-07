@@ -4,10 +4,14 @@
 name: Python package
 
 on:
+    workflow_call:
     push:
         branches: ["main"]
     pull_request:
         branches: ["main"]
+
+permissions:
+    contents: read
 
 jobs:
     build:
@@ -19,6 +23,8 @@ jobs:
 
         steps:
             - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
             - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v7
               with:
@@ -46,3 +52,5 @@ jobs:
             - name: Build package
               run: |
                   pdm build
+            - name: Check package archives
+              run: pdm run package-check
