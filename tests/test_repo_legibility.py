@@ -163,7 +163,7 @@ def test_ci_build_job_runs_all_validation_lanes() -> None:
     required_actions: list[tuple[str, dict[str, str] | None]] = [
         ("actions/checkout@v7", None),
         (
-            "actions/setup-python@v6",
+            "actions/setup-python@v7",
             {"python-version": "${{ matrix.python-version }}"},
         ),
         ("pdm-project/setup-pdm@v4", None),

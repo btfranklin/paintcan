@@ -41,6 +41,7 @@ dev = [
     "pyyaml>=6.0.3",
     "markdown-it-py>=4.2.0",
     "types-pyyaml>=6.0.12.20260518",
+    "twine>=7.0.0",
 ]
 
 [tool.ruff.lint]
@@ -64,4 +65,5 @@ test = "pytest"
 lint = "ruff check src tests"
 typecheck = "mypy src tests"
 "check:repo" = "pytest tests/test_repo_legibility.py"
+"package-check" = "twine check --strict dist/*"
 check = {composite = ["lint", "typecheck", "check:repo", "test"]}

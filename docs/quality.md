@@ -21,6 +21,9 @@ pdm run check
 checks, and the pytest suite. Run `pdm build` as well before release or packaging
 changes.
 
+After building release artifacts, run `pdm run package-check` to validate the
+wheel and source archive metadata and README rendering with Twine.
+
 ## Test Contracts
 
 Tests should protect user-facing behavior rather than mirror implementation
